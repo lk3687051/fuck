@@ -2,7 +2,9 @@ package market
 import (
 	// "fmt"
 	"time"
-	// "path"
+	"path/filepath"
+	"encoding/json"
+	"io/ioutil"
 )
 const (
 	// Min1 - 1 Minute time string
@@ -52,54 +54,87 @@ type Quote struct {
 	Amount    []float64     `json:"amount"`
 }
 
-func (q *Quote)Update()  {
-
+func (q *Quote) Save()  {
+	file, _ := json.MarshalIndent(q, "", " ")
+	_ = ioutil.WriteFile(filepath.Join(DataDir, "Daily", q.TsCode + ".json"), file, 0644)
 }
 
-func (q *Quote)Load()  {
-	// pathname := path.Join(DataDir, "quote", q.Symbol+".csv")
-	// fileExists()
-}
-
-func (q *Quote)Save()  {
-	// pathname := path.Join(DataDir, "quote", q.Symbol+".csv")
-	// fileExists()
-}
-
-func NewQuote(ts_code string) Quote {
+func (q *Quote) Update()  {
 	params := make(map[string]string)
-  params["ts_code"] = ts_code
-  params["start_date"] = "20200710"
-  // params["end_date"] = "20180718"
-  var fields = []string {}
-  // 根据api 请求对应的接口
-  data, _ := c.Daily(params, fields)
+	params["ts_code"] = q.TsCode
+	if len(q.Date) == 0 {
+		params["start_date"] = "20150101"
+		defer q.Save()
+	} else {
+		lastDate := q.Date[len(q.Date) - 1]
+		if time.Now().Format("20060102") ==  lastDate.Format("20060102") {
+			return
+		}
+		params["start_date"] = lastDate.Format("20060102")
+		defer q.Save()
+	}
+	var fields = []string {}
+	data, _ := c.Daily(params, fields)
 	bars := len(data.Data.Items)
-	// fmt.Printf("%+v", data)
-  q := Quote{
-    TsCode:     ts_code,
-    Date:       make([]time.Time, bars),
-    Open:       make([]float64, bars),
-    High:       make([]float64, bars),
-    Low:        make([]float64, bars),
-    Close:      make([]float64, bars),
-    Volume:     make([]float64, bars),
+	_q := Quote{
+		TsCode:     q.TsCode,
+		Date:       make([]time.Time, bars),
+		Open:       make([]float64, bars),
+		High:       make([]float64, bars),
+		Low:        make([]float64, bars),
+		Close:      make([]float64, bars),
+		Volume:     make([]float64, bars),
 		PreClose:   make([]float64, bars),
 		Change:     make([]float64, bars),
 		PctChg:     make([]float64, bars),
 		Amount:     make([]float64, bars),
+	}
+
+	l := len(data.Data.Items)
+	for _index, item := range data.Data.Items {
+		index := l - _index - 1
+		_q.Date[index],_ = time.Parse("20060102", item[1].(string))
+		_q.Open[index] = item[2].(float64)
+		_q.High[index] = item[3].(float64)
+		_q.Low[index] = item[4].(float64)
+		_q.Close[index] = item[5].(float64)
+		_q.Volume[index] = item[9].(float64)
+		_q.PreClose[index] = item[6].(float64)
+		_q.Change[index] = item[7].(float64)
+		_q.PctChg[index] = item[8].(float64)
+		_q.Amount[index] = item[10].(float64)
   }
-	for index, item := range data.Data.Items {
-		q.Date[index],_ = time.Parse("20060102", item[1].(string))
-		q.Open[index] = item[2].(float64)
-		q.High[index] = item[3].(float64)
-		q.Low[index] = item[4].(float64)
-		q.Close[index] = item[5].(float64)
-		q.Volume[index] = item[9].(float64)
-		q.PreClose[index] = item[6].(float64)
-		q.Change[index] = item[7].(float64)
-		q.PctChg[index] = item[8].(float64)
-		q.Amount[index] = item[10].(float64)
-  }
+
+	q.Date = append(q.Date, _q.Date...)
+	q.Open = append(q.Open, _q.Open...)
+	q.High = append(q.High, _q.High...)
+	q.Low = append(q.Low, _q.Low...)
+	q.Close = append(q.Close, _q.Close...)
+	q.Volume = append(q.Volume, _q.Volume...)
+	q.PreClose = append(q.PreClose, _q.PreClose...)
+	q.Change = append(q.Change, _q.Change...)
+	q.PctChg = append(q.PctChg, _q.PctChg...)
+	q.Amount = append(q.Amount, _q.Amount...)
+}
+
+func NewQuote(ts_code string) Quote {
+	q := Quote{
+		TsCode:     ts_code,
+		Date:       make([]time.Time, 0),
+		Open:       make([]float64, 0),
+		High:       make([]float64, 0),
+		Low:        make([]float64, 0),
+		Close:      make([]float64, 0),
+		Volume:     make([]float64, 0),
+		PreClose:   make([]float64, 0),
+		Change:     make([]float64, 0),
+		PctChg:     make([]float64, 0),
+		Amount:     make([]float64, 0),
+	}
+	if fileExists(filepath.Join(DataDir, "Daily", ts_code + ".json")) {
+		file, _ := ioutil.ReadFile("test.json")
+		_ = json.Unmarshal([]byte(file), &q)
+	}
+	q.Update()
 	return q
 }
