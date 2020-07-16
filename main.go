@@ -5,5 +5,6 @@ import (
 )
 
 func main()  {
-  market.NewMarket()
+  m := market.NewMarket()
+  m.CalcMA()
 }
