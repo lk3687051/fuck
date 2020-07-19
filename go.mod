@@ -10,4 +10,5 @@ require (
 	github.com/markcheno/go-talib v0.0.0-20190307022042-cd53a9264d70
 	github.com/sdcoffey/big v0.5.0 // indirect
 	github.com/sdcoffey/techan v0.10.0 // indirect
+	github.com/sirupsen/logrus v1.6.0
 )
