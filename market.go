@@ -2,7 +2,7 @@ package fuck
 import (
   "time"
   // "encoding/json"
-  // log "github.com/sirupsen/logrus"
+  log "github.com/sirupsen/logrus"
 )
 
 type Market struct {
@@ -15,11 +15,24 @@ type Market struct {
     ConceptPools    map[string] string  `json:"conceptPools"`
 }
 
-
 func Start()  {
-  SetupPools()
-  SetupStocks()
-  for _,p := range PoolMap {
+  LoadPools()
+  LoadStocks()
+
+  log.Info("Start Statistics Stocks")
+  for _,s := range stockMap {
+    s.Statistics()
+  }
+  
+  log.Info("Start Statistics Pools")
+  for _,p := range PoolMap.Pools {
     p.Statistics()
   }
+
+  log.Info("End")
+}
+
+func SetupData()  {
+  SetupPools()
+  SetupStocks()
 }

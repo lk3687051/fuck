@@ -17,7 +17,6 @@ func GetStocks() []Stock {
       continue
     }
     ld,_ := time.Parse("20060102", _s[6].(string))
-    log.Debugf("Get data %+v\n", _s)
     s := Stock{
   		TsCode: _s[0].(string),
   		Name: _s[2].(string),

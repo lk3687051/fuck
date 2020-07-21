@@ -9,7 +9,9 @@ func main()  {
 		DisableColors: true,
 		FullTimestamp: true,
 	})
-  log.SetLevel(log.DebugLevel)
+  // log.SetLevel(log.DebugLevel)
+  log.SetLevel(log.InfoLevel)
+
   log.Info("Now Start fuck program\n")
   // fuck.SetupStocks()
   fuck.Start()

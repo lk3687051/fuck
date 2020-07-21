@@ -2,7 +2,6 @@ package fuck
 import (
 	// "fmt"
 	"time"
-	"github.com/markcheno/go-talib"
 )
 
 type QuoteType int
@@ -21,10 +20,11 @@ type Quote struct {
 	Change    []float64     `json:"change"`
 	PctChg    []float64     `json:"pct_chg"`
 	Amount    []float64     `json:"amount"`
-	MA5       []float64     `json:"ma5"`
-	MA10       []float64     `json:"ma10"`
-	MA20       []float64     `json:"ma20"`
-	MA62       []float64     `json:"ma62"`
+	MA5       []float64
+	MA10       []float64
+	MA20       []float64
+	MA62       []float64
+	UP         []bool
 }
 
 func (q *Quote) GetIndex(d string) (int, bool) {
@@ -35,14 +35,4 @@ func (q *Quote) GetIndex(d string) (int, bool) {
 		}
 	}
 	return 0,false
-}
-
-func (q *Quote) CalcMA()  {
-	if len(q.Date) <= 63 {
-		return
-	}
-	q.MA5 = talib.Ma(q.Close, 5, talib.SMA)
-	q.MA10 = talib.Ma(q.Close, 10, talib.SMA)
-	q.MA20 = talib.Ma(q.Close, 20, talib.SMA)
-	q.MA62 = talib.Ma(q.Close, 62, talib.SMA)
 }
