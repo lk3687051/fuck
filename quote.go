@@ -25,6 +25,8 @@ type Quote struct {
 	MA20       []float64
 	MA62       []float64
 	UP         []bool
+	IslimitUp  []bool
+	IslimitDown  []bool
 }
 
 func (q *Quote) GetIndex(d string) (int, bool) {
