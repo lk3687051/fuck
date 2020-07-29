@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Highstock Example</title>
+
+		<style type="text/css">
+
+		</style>
+	</head>
+	<body>
+
+<script src="https://code.highcharts.com.cn/highstock/highstock.js"></script>
+<script src="https://code.highcharts.com.cn/highcharts/modules/exporting.js"></script>
+<script src="https://code.highcharts.com.cn/highcharts/modules/data.js"></script>
+<script src="https://code.highcharts.com.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+<div id="container" style="height: 400px; min-width: 310px"></div>
+
+		<script type="text/javascript">
+		Highcharts.getJSON('https://www.highcharts.com/samples/data/aapl-ohlc.json', function (data) {
+
+    // create the chart
+    Highcharts.stockChart('container', {
+
+
+        rangeSelector: {
+            selected: 2
+        },
+
+        title: {
+            text: '600133：陆康生物 走势图'
+        },
+
+        series: [{
+            type: 'ohlc',
+            name: '600133：陆康生物',
+            data: data,
+            dataGrouping: {
+                units: [[
+                    'week', // unit name
+                    [1] // allowed multiples
+                ], [
+                    'month',
+                    [1, 2, 3, 4, 6]
+                ]]
+            }
+        }]
+    });
+});
+
+		</script>
+	</body>
+</html>
