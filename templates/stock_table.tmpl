@@ -1,0 +1,35 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <table class="table table-bordered">
+    <caption>股票列表</caption>
+    <thead>
+      <tr>
+        <th>代码</th>
+        <th>名称</th>
+        <th>地域</th>
+        <th>行业</th>
+        <th>市场</th>
+        <th>上市日期</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{ range .Stocks }}
+        <tr>
+          <td>{{.Exchange}}</td>
+          <td>{{.TsCode}}</td>
+          <td>{{.Name}}</td>
+          <td>{{.Industry}}</td>
+          <td>{{.Area}}</td>
+          <td>{{.ListDate}}</td>
+        </tr>
+      {{ end }}
+    </tbody>
+  </table>
+</body>
+</html>

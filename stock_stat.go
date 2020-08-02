@@ -4,5 +4,5 @@ import (
 )
 func (s *Stock) Statistics()  {
   log.Debugf("Statistics Stock  %s", s.Name)
-  s.DailyQuote.PreCalc()
+  // s.DailyQuote.PreCalc()
 }

@@ -2,7 +2,7 @@ package fuck
 import (
   "time"
   // "encoding/json"
-  log "github.com/sirupsen/logrus"
+  // log "github.com/sirupsen/logrus"
 )
 
 type Market struct {
@@ -16,23 +16,11 @@ type Market struct {
 }
 
 func Start()  {
-  LoadPools()
-  LoadStocks()
 
-  log.Info("Start Statistics Stocks")
-  for _,s := range stockMap {
-    s.Statistics()
-  }
-  
-  log.Info("Start Statistics Pools")
-  for _,p := range PoolMap.Pools {
-    p.Statistics()
-  }
-
-  log.Info("End")
 }
 
 func SetupData()  {
+  // SetupStocks()
   SetupPools()
   SetupStocks()
 }
