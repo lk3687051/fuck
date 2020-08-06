@@ -4,7 +4,7 @@ import (
   log "github.com/sirupsen/logrus"
 )
 
-func GetStocks() []Stock {
+func GetStocksByTushare() []Stock {
   Stocks := make([]Stock, 0)
 	params := make(map[string]string)
   // 字段
@@ -30,7 +30,7 @@ func GetStocks() []Stock {
   return Stocks
 }
 
-func GetDaily(ts_code string, date time.Time) Quote {
+func GetStockDailyByTushare(ts_code string, date time.Time) Quote {
   params := make(map[string]string)
   params["ts_code"] = ts_code
   if date.After(dailyStart) {

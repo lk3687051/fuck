@@ -14,7 +14,6 @@ type Stock struct {
 	ListDate    time.Time  `json:"list_date"`
 	Exchange    string     `json:"exchange"`
 	UpdateAt  time.Time  `json:"updateat"`
-  // DailyQuote   Quote
 }
 
 func NewStock(ts_code string) *Stock {
@@ -39,21 +38,6 @@ func (s *Stock) Save()  {
 	}
 }
 
-func (s *Stock)UpdateQuote()  {
-	// _q := GetDaily(s.TsCode, s.UpdateAt.AddDate(0, 0, 1))
-	// s.DailyQuote.Date = append(s.DailyQuote.Date, _q.Date...)
-	// s.DailyQuote.Open = append(s.DailyQuote.Open, _q.Open...)
-	// s.DailyQuote.High = append(s.DailyQuote.High, _q.High...)
-	// s.DailyQuote.Low = append(s.DailyQuote.Low, _q.Low...)
-	// s.DailyQuote.Close = append(s.DailyQuote.Close, _q.Close...)
-	// s.DailyQuote.Volume = append(s.DailyQuote.Volume, _q.Volume...)
-	// s.DailyQuote.PreClose = append(s.DailyQuote.PreClose, _q.PreClose...)
-	// s.DailyQuote.Change = append(s.DailyQuote.Change, _q.Change...)
-	// s.DailyQuote.PctChg = append(s.DailyQuote.PctChg, _q.PctChg...)
-	// s.DailyQuote.Amount = append(s.DailyQuote.Amount, _q.Amount...)
-	// s.Save()
-}
-
 func GetStockByCodes(ts_codes []string) []Stock {
 	stocks := make([]Stock, len(ts_codes))
 	for i, ts_code := range ts_codes {
@@ -63,6 +47,11 @@ func GetStockByCodes(ts_codes []string) []Stock {
 	return stocks
 }
 
+func GetAllTsCodes() []string {
+	ts_codes, _ := rdb.SMembers("stocks").Result()
+	return ts_codes
+}
+
 func GetStockList()  []*Stock{
 	ts_codes, _ := rdb.SMembers("stocks").Result()
 	stocks := make([]*Stock, len(ts_codes))
@@ -70,11 +59,11 @@ func GetStockList()  []*Stock{
 		stocks[i] = NewStock(ts_code)
 		log.Infof("%+v\n", stocks[i])
 	}
-
 	return stocks
 }
+
 func SetupStocks()  {
-	ss := GetStocks()
+	ss := GetStocksByTushare()
 	for _,s := range ss {
 		rdb.SAdd("stocks", s.TsCode)
 		s.Save()
