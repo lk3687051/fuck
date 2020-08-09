@@ -3,6 +3,7 @@ import (
 	// "fmt"
 	"time"
 	"math"
+	"encoding/json"
 	"github.com/markcheno/go-talib"
 )
 
@@ -12,6 +13,7 @@ const (
 )
 
 type Quote struct {
+	TsCode    string      `json:"ts_code"`
 	Date      []time.Time `json:"date"`
 	Open      []float64   `json:"open"`
 	High      []float64   `json:"high"`
@@ -32,7 +34,7 @@ type Quote struct {
 }
 
 func (q *Quote) Save()  {
-	key := "stock:" + ts_code + ":dailyquote"
+	key := "stock:" + q.TsCode + ":dailyquote"
 	data, _ := json.Marshal(q)
 	err := rdb.Set(key, string(data), 0).Err()
 	if err != nil {
@@ -40,10 +42,10 @@ func (q *Quote) Save()  {
 	}
 }
 
-func NewDailyQuoteFromWeb(ts_code string) Quote {
+func NewDailyQuoteFromWeb(ts_code string) {
 	q := GetStockDailyByTushare(ts_code, time.Now())
 	q.PreCalc()
-	return q
+	q.Save()
 }
 
 func (q *Quote) GetIndex(d string) (int, bool) {

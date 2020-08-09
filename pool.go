@@ -39,12 +39,3 @@ func AddStockToPool(category string, name string, code string) {
   key := fmt.Sprintf("pool:%s:%s", category, name)
   rdb.SAdd(key, code)
 }
-
-func SetupPools()  {
-  stocks := GetStocks()
-  for _, s := range stocks{
-    AddStockToPool("Area", s.Area, s.TsCode)
-    AddStockToPool("Industry", s.Industry, s.TsCode)
-    AddStockToPool("Exchange", s.Exchange, s.TsCode)
-  }
-}

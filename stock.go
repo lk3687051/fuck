@@ -17,7 +17,7 @@ type Stock struct {
 }
 
 func NewStock(ts_code string) *Stock {
-	key := "stock:" + ts_code
+	key := "stock:" + ts_code + ":info"
 	_s := Stock{}
 	val, err := rdb.Get(key).Result()
 	if err != nil {
@@ -31,8 +31,9 @@ func NewStock(ts_code string) *Stock {
 }
 
 func (s *Stock) Save()  {
+	key := "stock:" + s.TsCode + ":info"
 	data, _ := json.Marshal(s)
-	err := rdb.Set("stock:" + s.TsCode, string(data), 0).Err()
+	err := rdb.Set(key, string(data), 0).Err()
 	if err != nil {
 			panic(err)
 	}
@@ -60,12 +61,4 @@ func GetStockList()  []*Stock{
 		log.Infof("%+v\n", stocks[i])
 	}
 	return stocks
-}
-
-func SetupStocks()  {
-	ss := GetStocksByTushare()
-	for _,s := range ss {
-		rdb.SAdd("stocks", s.TsCode)
-		s.Save()
-	}
 }

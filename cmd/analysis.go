@@ -14,5 +14,6 @@ func main()  {
 
   log.Info("Now Start fuck program\n")
   // fuck.SetupStocks()
-  fuck.Start()
+  m := fuck.NewManager()
+  m.Load()
 }

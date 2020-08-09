@@ -30,19 +30,17 @@ func GetStocksByTushare() []Stock {
   return Stocks
 }
 
-func GetStockDailyByTushare(ts_code string, date time.Time) Quote {
+func GetStockDailyByTushare(ts_code string, date time.Time) *Quote {
   params := make(map[string]string)
   params["ts_code"] = ts_code
-  if date.After(dailyStart) {
-    params["start_date"] = date.Format("20060102")
-  } else {
-    params["start_date"] = dailyStart.Format("20060102")
-  }
-  log.Debugf("Get stock %s uote from tushare %s", ts_code, params["start_date"])
+  params["start_date"] = dailyStart.Format("20060102")
+
+  log.Debugf("Get stock %s quote from tushare %s", ts_code, params["start_date"])
   var fields = []string {}
   data, _ := c.Daily(params, fields)
   bars := len(data.Data.Items)
   q := Quote{
+    TsCode:     ts_code,
 		Date:       make([]time.Time, bars),
 		Open:       make([]float64, bars),
 		High:       make([]float64, bars),
@@ -68,5 +66,6 @@ func GetStockDailyByTushare(ts_code string, date time.Time) Quote {
     q.PctChg[index] = item[8].(float64)
     q.Amount[index] = item[10].(float64)
   }
-  return q
+
+  return &q
 }
