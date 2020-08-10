@@ -14,6 +14,7 @@ type Stock struct {
 	ListDate    time.Time  `json:"list_date"`
 	Exchange    string     `json:"exchange"`
 	UpdateAt  time.Time  `json:"updateat"`
+	DailyQuote  *Quote
 }
 
 func NewStock(ts_code string) *Stock {
@@ -21,12 +22,13 @@ func NewStock(ts_code string) *Stock {
 	_s := Stock{}
 	val, err := rdb.Get(key).Result()
 	if err != nil {
-		return &_s
+		return nil
 	}
 	err = json.Unmarshal([]byte(val) , &_s)
 	if err != nil {
 		fmt.Println("error:", err)
 	}
+	_s.DailyQuote =  NewQuote(ts_code)
 	return &_s
 }
 
@@ -36,6 +38,9 @@ func (s *Stock) Save()  {
 	err := rdb.Set(key, string(data), 0).Err()
 	if err != nil {
 			panic(err)
+	}
+	if s.DailyQuote != nil {
+		s.DailyQuote.Save()
 	}
 }
 

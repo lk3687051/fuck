@@ -4,26 +4,40 @@ import (
 )
 
 type Manager struct {
-  Stocks []string
-  StockInfo map[string]*Stock
-  Pool map[string]Pool
+  Stocklist []string
+  Stocks map[string]*Stock
+  Pools []*Pool
 }
 
-func NewManager() Manager {
-  m := Manager{}
-  m.StockInfo = map[string]*Stock{}
-  return m
-}
+var GlobalManager = new(Manager)
 
-func (m *Manager) Load()  {
-  log.Info("Start Loading data")
-	m.Stocks = GetAllTsCodes()
-  for _, ts_code := range m.Stocks {
+func (m *Manager) Init()  {
+  log.Info("Start Loading stock data")
+	m.Stocklist = GetAllTsCodes()
+  m.Stocks = map[string]*Stock{}
+  m.Pools = []*Pool{}
+  for _, ts_code := range m.Stocklist {
     s := NewStock(ts_code)
-    m.StockInfo[ts_code] = s
-    // log.Infof("%v", s)
+    m.Stocks[ts_code] = s
+  }
+  log.Info("Start Loading pool data")
+  p_types := []string {"Area", "Industry", "Exchange"}
+  for _, p_type := range p_types {
+    p_names ,_ := rdb.SMembers("pools:" + p_type).Result()
+    log.Infof("%+v", p_names)
+    for _, p_name := range p_names {
+      p := NewPool(p_type, p_name)
+      m.Pools = append(m.Pools, p)
+    }
   }
   log.Info("End Loading data")
+}
+
+func (m *Manager) Worker()  {
+  for _, p := range m.Pools {
+    p.Statistics()
+    p.Save()
+  }
 }
 
 func SetupData()  {

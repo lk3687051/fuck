@@ -5,6 +5,7 @@ import (
 	"math"
 	"encoding/json"
 	"github.com/markcheno/go-talib"
+	log "github.com/sirupsen/logrus"
 )
 
 type QuoteType int
@@ -40,6 +41,20 @@ func (q *Quote) Save()  {
 	if err != nil {
 			panic(err)
 	}
+}
+
+func NewQuote(ts_code string) *Quote {
+	key := "stock:" + ts_code + ":dailyquote"
+	_q := Quote{}
+	val, err := rdb.Get(key).Result()
+	if err != nil {
+		return nil
+	}
+	err = json.Unmarshal([]byte(val) , &_q)
+	if err != nil {
+		log.Info("error:", err)
+	}
+	return &_q
 }
 
 func NewDailyQuoteFromWeb(ts_code string) {

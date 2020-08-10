@@ -10,12 +10,18 @@ import (
 type StockListPage struct {
     Stocks     []*fuck.Stock
 }
+
+type PoolListPage struct {
+    Pools     []*fuck.Pool
+}
+
 func stock_list(w http.ResponseWriter, req *http.Request) {
 	page := StockListPage{}
 	tmpl := template.Must(template.ParseFiles("templates/stock_table.tmpl"))
 	page.Stocks = fuck.GetStockList()
 	tmpl.Execute(w, page)
 }
+
 func main() {
 	fs := http.FileServer(http.Dir("./static"))
   http.Handle("/", fs)
