@@ -28,7 +28,7 @@ func NewStock(ts_code string) *Stock {
 	if err != nil {
 		fmt.Println("error:", err)
 	}
-	_s.DailyQuote =  NewQuote(ts_code)
+	// _s.DailyQuote =  NewQuote(ts_code)
 	return &_s
 }
 

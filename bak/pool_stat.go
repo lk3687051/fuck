@@ -19,6 +19,7 @@ func (p *Pool)Statistics()  {
   p.Stat.UpNum = 0
   p.Stat.DownNum = 0
 
+  p.Stat.Nums = len(p.Stocks)
   for _, tscode := range p.Stocks {
     s, _ := GlobalManager.Stocks[tscode]
     length := len(s.DailyQuote.UP)
@@ -37,4 +38,6 @@ func (p *Pool)Statistics()  {
       p.Stat.LimitDown = p.Stat.LimitDown + 1
     }
   }
+
+  // 计算5日平均上涨概率
 }

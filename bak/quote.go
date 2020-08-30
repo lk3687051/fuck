@@ -14,8 +14,6 @@ const (
 )
 
 type Quote struct {
-	TsCode    string      `json:"ts_code"`
-	Date      []time.Time `json:"date"`
 	Open      []float64   `json:"open"`
 	High      []float64   `json:"high"`
 	Low       []float64   `json:"low"`
