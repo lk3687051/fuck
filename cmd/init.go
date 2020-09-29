@@ -1,6 +1,6 @@
 package main
 import (
-  "fuck"
+  "fuck/fetch"
   log "github.com/sirupsen/logrus"
 )
 
@@ -12,5 +12,5 @@ func main()  {
   log.SetLevel(log.DebugLevel)
   log.Info("Now Start fuck program\n")
   // fuck.SetupStocks()
-  fuck.SetupData()
+  fetch.DownLoadAllStock()
 }

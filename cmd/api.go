@@ -8,39 +8,16 @@ import (
     "net/http"
     "github.com/gorilla/mux"
     "github.com/gorilla/handlers"
-    "fuck"
+    "fuck/api"
 )
-
-var stocks []*fuck.Stock
-func returnAllStocks(w http.ResponseWriter, r *http.Request) {
-    json.NewEncoder(w).Encode(stocks)
-}
-
-func returnAllPools(w http.ResponseWriter, r *http.Request) {
-    vars := mux.Vars(r)
-    key := vars["category"]
-    pools := fuck.GetPoolByCategory(key)
-    json.NewEncoder(w).Encode(pools)
-}
-
-func returnSingleArticle(w http.ResponseWriter, r *http.Request) {
-    vars := mux.Vars(r)
-    key := vars["code"]
-
-    for _, stock := range stocks {
-        if stock.TsCode == key {
-            json.NewEncoder(w).Encode(stock)
-        }
-    }
-}
 
 func handleRequests() {
     myRouter := mux.NewRouter().StrictSlash(true)
     // myRouter.HandleFunc("/", homePage)
-    myRouter.HandleFunc("/stocks", returnAllStocks)
-    myRouter.HandleFunc("/stock/{code}", returnSingleArticle)
+    myRouter.HandleFunc("/stocks", api.AllStocks)
+    myRouter.HandleFunc("/stock/{code}", api.SingleArticle)
 
-    myRouter.HandleFunc("/pool/{category}", returnAllPools)
+    myRouter.HandleFunc("/pool/{category}", api.AllPools)
 
     log.Fatal(http.ListenAndServe("127.0.0.1:8888",handlers.CORS()(myRouter)))
 }
