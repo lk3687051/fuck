@@ -1,0 +1,48 @@
+DELETE daily
+PUT daily
+{
+  "mappings": {
+      "properties": {
+        "amount": {
+          "type": "float"
+        },
+        "change": {
+          "type": "float"
+        },
+        "close": {
+          "type": "float"
+        },
+        "high": {
+          "type": "float"
+        },
+        "low": {
+          "type": "float"
+        },
+        "open": {
+          "type": "float"
+        },
+        "pct_chg": {
+          "type": "float"
+        },
+        "pre_close": {
+          "type": "float"
+        },
+        "trade_date": {
+          "type": "date",
+          "format": "yyyyMMdd"
+        },
+        "ts_code": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "vol": {
+          "type": "float"
+        }
+      }
+    }
+}

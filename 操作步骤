@@ -1,0 +1,7 @@
+删除
+/apps/bin/sensuctl check list --format wrapped-json > /tmp/checks.json
+/apps/bin/sensuctl delete -f /tmp/checks.json
+
+
+恢复
+/apps/bin/sensuctl create -f /tmp/checks.json

@@ -1,15 +1,15 @@
 package config
-import (
-  "github.com/ShawnRong/tushare-go"
-  "github.com/go-redis/redis"
-  "github.com/olivere/elastic/v7"
-)
-var TsClient = tushare.New("6d8cb43818f3724d89d561797bd6b37a9a3555c109160aa51ed7428e")
-var EsClient *elastic.Client
-func init()  {
-  var err error
-  EsClient, err = elastic.NewClient(elastic.SetURL("http://127.0.0.1:9200/"))
-  if err != nil {
-      log.Fatal(err)
-  }
+type Configuration struct {
+  ElasticHost        string    `envconfig:"ELASTIC_HOST" default:"http://127.0.0.1:9200/"`
+  TushareToken       string    `envconfig:"TUSHARE_TOKEN" default:"http://127.0.0.1:9200/"`
+  DailyLength        int       `envconfig:"DAILAY_LENGTH" default:"365"`
+}
+
+var Config Configuration
+func init() {
+  Config = Configuration {
+      ElasticHost: "http://127.0.0.1:9200",
+      TushareToken: "33454fe9ccab969249773ab8a05a5a7dad45c23a15cc71e17e6a33b6",
+      DailyLength: 365,
+    }
 }
