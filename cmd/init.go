@@ -29,9 +29,9 @@ func main()  {
   logger.Info("Start get daily data")
 	for _, stock := range stocks {
 		dailys,_ := spider.Daily(stock.TsCode, config.Config.DailyLength)
-		for _, daily := range dailys {
-			daily.Area = stock.Area
-			daily.Industry = stock.Industry
+		for i, _ := range dailys {
+			dailys[i].Area = stock.Area
+			dailys[i].Industry = stock.Industry
 		}
 		store.SaveDailys(dailys)
 	}
